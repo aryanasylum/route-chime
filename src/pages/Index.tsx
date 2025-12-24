@@ -1,12 +1,30 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
+import HeroSection from "@/components/home/HeroSection";
+import FeaturesSection from "@/components/home/FeaturesSection";
+import RoutesPanel from "@/components/home/RoutesPanel";
+import SchedulesPanel from "@/components/home/SchedulesPanel";
+import FindBusPanel from "@/components/home/FindBusPanel";
+
+type TabType = "routes" | "schedules" | "find-bus";
 
 const Index = () => {
+  const [activeTab, setActiveTab] = useState<TabType>("routes");
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <Header />
+      <main>
+        <HeroSection activeTab={activeTab} onTabChange={setActiveTab} />
+        <FeaturesSection />
+
+        {/* Tab Content */}
+        {activeTab === "routes" && <RoutesPanel />}
+        {activeTab === "schedules" && <SchedulesPanel />}
+        {activeTab === "find-bus" && <FindBusPanel />}
+      </main>
+      <Footer />
     </div>
   );
 };
