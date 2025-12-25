@@ -14,7 +14,218 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bus_routes: {
+        Row: {
+          created_at: string
+          distance_km: number | null
+          estimated_time_minutes: number | null
+          fare: number | null
+          from_location: string
+          id: string
+          is_active: boolean
+          route_name: string
+          route_number: string
+          to_location: string
+          total_stops: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          distance_km?: number | null
+          estimated_time_minutes?: number | null
+          fare?: number | null
+          from_location: string
+          id?: string
+          is_active?: boolean
+          route_name: string
+          route_number: string
+          to_location: string
+          total_stops?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          distance_km?: number | null
+          estimated_time_minutes?: number | null
+          fare?: number | null
+          from_location?: string
+          id?: string
+          is_active?: boolean
+          route_name?: string
+          route_number?: string
+          to_location?: string
+          total_stops?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      bus_schedules: {
+        Row: {
+          arrival_time: string
+          bus_number: string
+          created_at: string
+          days_of_week: string[] | null
+          departure_time: string
+          id: string
+          is_active: boolean
+          route_id: string
+          updated_at: string
+        }
+        Insert: {
+          arrival_time: string
+          bus_number: string
+          created_at?: string
+          days_of_week?: string[] | null
+          departure_time: string
+          id?: string
+          is_active?: boolean
+          route_id: string
+          updated_at?: string
+        }
+        Update: {
+          arrival_time?: string
+          bus_number?: string
+          created_at?: string
+          days_of_week?: string[] | null
+          departure_time?: string
+          id?: string
+          is_active?: boolean
+          route_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bus_schedules_route_id_fkey"
+            columns: ["route_id"]
+            isOneToOne: false
+            referencedRelation: "bus_routes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bus_stops: {
+        Row: {
+          area: string | null
+          created_at: string
+          id: string
+          latitude: number | null
+          longitude: number | null
+          stop_code: string | null
+          stop_name: string
+        }
+        Insert: {
+          area?: string | null
+          created_at?: string
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          stop_code?: string | null
+          stop_name: string
+        }
+        Update: {
+          area?: string | null
+          created_at?: string
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          stop_code?: string | null
+          stop_name?: string
+        }
+        Relationships: []
+      }
+      buses: {
+        Row: {
+          bus_number: string
+          created_at: string
+          current_latitude: number | null
+          current_longitude: number | null
+          current_stop_id: string | null
+          id: string
+          last_updated: string | null
+          route_id: string | null
+          status: string | null
+        }
+        Insert: {
+          bus_number: string
+          created_at?: string
+          current_latitude?: number | null
+          current_longitude?: number | null
+          current_stop_id?: string | null
+          id?: string
+          last_updated?: string | null
+          route_id?: string | null
+          status?: string | null
+        }
+        Update: {
+          bus_number?: string
+          created_at?: string
+          current_latitude?: number | null
+          current_longitude?: number | null
+          current_stop_id?: string | null
+          id?: string
+          last_updated?: string | null
+          route_id?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "buses_current_stop_id_fkey"
+            columns: ["current_stop_id"]
+            isOneToOne: false
+            referencedRelation: "bus_stops"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "buses_route_id_fkey"
+            columns: ["route_id"]
+            isOneToOne: false
+            referencedRelation: "bus_routes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      route_stops: {
+        Row: {
+          arrival_time_offset: number | null
+          created_at: string
+          id: string
+          route_id: string
+          stop_id: string
+          stop_order: number
+        }
+        Insert: {
+          arrival_time_offset?: number | null
+          created_at?: string
+          id?: string
+          route_id: string
+          stop_id: string
+          stop_order: number
+        }
+        Update: {
+          arrival_time_offset?: number | null
+          created_at?: string
+          id?: string
+          route_id?: string
+          stop_id?: string
+          stop_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "route_stops_route_id_fkey"
+            columns: ["route_id"]
+            isOneToOne: false
+            referencedRelation: "bus_routes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "route_stops_stop_id_fkey"
+            columns: ["stop_id"]
+            isOneToOne: false
+            referencedRelation: "bus_stops"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
