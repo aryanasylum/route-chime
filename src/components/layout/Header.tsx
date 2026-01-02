@@ -1,11 +1,19 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Bus, Menu, X } from "lucide-react";
+import { Bus, Menu, X, LogOut, User } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Header = () => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user, loading, signOut, getUserDisplayName } = useAuth();
 
   const navLinks = [
     { name: "Home", path: "/" },
@@ -42,16 +50,37 @@ const Header = () => {
 
           {/* Auth Buttons */}
           <div className="hidden md:flex items-center gap-3">
-            <Link to="/login">
-              <Button variant="ghost" size="nav">
-                Login
-              </Button>
-            </Link>
-            <Link to="/signup">
-              <Button variant="accent" size="default">
-                Sign Up
-              </Button>
-            </Link>
+            {loading ? (
+              <div className="w-20 h-9 bg-secondary/50 rounded-md animate-pulse" />
+            ) : user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="nav" className="gap-2">
+                    <User className="w-4 h-4" />
+                    {getUserDisplayName()}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem onClick={signOut} className="gap-2 cursor-pointer">
+                    <LogOut className="w-4 h-4" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Link to="/login">
+                  <Button variant="ghost" size="nav">
+                    Login
+                  </Button>
+                </Link>
+                <Link to="/signup">
+                  <Button variant="accent" size="default">
+                    Sign Up
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -78,16 +107,25 @@ const Header = () => {
                 </Link>
               ))}
               <hr className="border-border/30 my-2" />
-              <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
-                <Button variant="ghost" className="w-full justify-start">
-                  Login
+              {user ? (
+                <Button variant="ghost" className="w-full justify-start gap-2" onClick={() => { signOut(); setMobileMenuOpen(false); }}>
+                  <LogOut className="w-4 h-4" />
+                  Sign Out ({getUserDisplayName()})
                 </Button>
-              </Link>
-              <Link to="/signup" onClick={() => setMobileMenuOpen(false)}>
-                <Button variant="accent" className="w-full">
-                  Sign Up
-                </Button>
-              </Link>
+              ) : (
+                <>
+                  <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
+                    <Button variant="ghost" className="w-full justify-start">
+                      Login
+                    </Button>
+                  </Link>
+                  <Link to="/signup" onClick={() => setMobileMenuOpen(false)}>
+                    <Button variant="accent" className="w-full">
+                      Sign Up
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         )}
